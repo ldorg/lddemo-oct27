@@ -13,6 +13,9 @@ permissions:
 jobs:
   test:
     steps:
+      - &checkout-step
+        name: Checkout code
+        uses: cloudbees-io/checkout@v1
       - name: Run Jenkins Job
         kind: test
         uses: cloudbees-io/jenkins-run-job@v2
@@ -109,8 +112,7 @@ jobs:
       MAJOR_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT }}
       MINOR_COUNT: ${{ steps.FetchSonarQubeIssues.outputs.MINOR_COUNT }}
     steps:
-      - name: Checkout
-        uses: cloudbees-io/checkout@v1
+      - *checkout-step
       - name: Get code coverage
         kind: test
         uses: docker://node:lts
