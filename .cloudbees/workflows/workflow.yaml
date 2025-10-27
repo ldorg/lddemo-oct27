@@ -62,6 +62,25 @@ jobs:
           format: MARKDOWN
     outputs:
       CODE_COVERAGE: ${{ steps.RunUnitTest.outputs.CODE_COVERAGE }}
+  anchor-merge-test:
+    steps:
+      - &base-step
+        name: Base step with defaults
+        uses: docker://alpine:latest
+        continue-on-error: true
+        run: |
+          echo "Running base step"
+          echo "Environment: production"
+      - <<: *base-step
+        name: Override name only
+      - <<: *base-step
+        name: Override name and continue-on-error
+        continue-on-error: false
+      - <<: *base-step
+        name: Override name and run script
+        run: |
+          echo "Running overridden step"
+          echo "Environment: development"
   build-container-image:
     outputs:
       artifact-id: ${{ fromJSON(steps.build-image.outputs.artifact-ids)[ format('index.docker.io/{0}/hackers-organized:{1}', vars.DOCKER_USER, cloudbees.scm.sha) ] }}
